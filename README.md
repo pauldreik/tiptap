@@ -31,12 +31,24 @@ There are no external dependencies.
 
 License: Boost software license 1.0
 
+## Why? What is the purpose?
+
+I made this for fun. I had in mind to make a counter+block cipher based pseudo random number generator, to see how many rounds of AES would be needed to pass statistical randomness tests. 
+
+It may be useful to prototype stuff - I have FPGA implementations in mind, where an LSFR should be very cheap compared to a counter. Being able to prototype in C++ is nice.
+
 ## Smaller sizes (3<=N<=64)
 
 The class SmallLFSR implements smaller LFSRs using the builtin std::uint8_t, std::uint16_t etc. up to std::uint64_t.
 
 The class is templated on the size, all steps between N=3 and N=64 are supported. By default, the smallest underlying type that is large enough is used.
 
+Trying to use an excessive size or below 3 results in a compile time error.
+
 ## Larger sizes (up to N=168)
 
 Larger LFSR is implemented with a custom bignum class, adapted for this purpose. That should in theory make it faster, since the bignum class only needs to support what is needed for LFSRs, not arbitrary operations.
+
+There is no limit on size, if the taps are known for larger N (the best I could find is [this pdf linked from wikipedia](https://web.archive.org/web/20161007061934/http://courses.cse.tamu.edu/csce680/walker/lfsr_table.pdf)), there is no problem augmenting the code.
+
+Trying to use a size which is unsupported results in a compile time error.
