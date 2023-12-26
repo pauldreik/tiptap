@@ -93,14 +93,17 @@ struct BigNum
     }
   }
 
-  // right shift one bit
-  constexpr void shr_one_bit()
+  // right shift one bit. top_bit gives what should be filled at the top
+  // (default zero/false)
+  constexpr void shr_one_bit(bool top_bit = false)
   {
     for (std::size_t i = 0; i < m_data.size(); ++i) {
       m_data[i] >>= 1;
       if (i + 1 < m_data.size()) {
         // get the top bit from the bottom bit of the next limb
         m_data[i] |= (m_data[i + 1] << (BitsPerLimb - 1));
+      } else {
+        m_data[i] |= (Limb{ top_bit } << (BitsPerLimb - ExcessBits - 1));
       }
     }
   }

@@ -18,8 +18,7 @@ public:
     constexpr auto taps = getTaps<N>();
     const auto bit = m_state.parity(taps_to_bits(taps));
     // do the equivalent of  m_state = (m_state >> 1) | (bit << (N - 1));
-    m_state.shr_one_bit();
-    m_state.template set_bit_to<N - 1>(bit);
+    m_state.shr_one_bit(bit);
   }
 
   /// observe the state

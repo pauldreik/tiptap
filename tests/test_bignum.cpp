@@ -168,12 +168,25 @@ TEST_CASE("a bignum can be right shifted one bit")
 
   // make an all ones, which we shift
   BigNum<1234> big;
-  big.complement_in_place();
-  for (int i = 0; i < 1234; ++i) {
-    REQUIRE(big.popcount() == 1234 - i);
-    big.shr_one_bit();
+  GIVEN("an all ones bignum we shift zeros into")
+  {
+    big.complement_in_place();
+    for (int i = 0; i < 1234; ++i) {
+      REQUIRE(big.popcount() == 1234 - i);
+      big.shr_one_bit();
+    }
+    REQUIRE(big.popcount() == 0);
   }
-  REQUIRE(big.popcount() == 0);
+
+  GIVEN("an all ones bignum which we shift ones into")
+  {
+    big.complement_in_place();
+    for (int i = 0; i < 1234; ++i) {
+      REQUIRE(big.popcount() == 1234);
+      big.shr_one_bit(true);
+    }
+    REQUIRE(big.popcount() == 1234);
+  }
 }
 
 /* no need to provide this
