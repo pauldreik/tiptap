@@ -108,6 +108,16 @@ struct BigNum
     }
   }
 
+  constexpr bool operator==(const BigNum& other) const
+  {
+    return m_data == other.m_data;
+  }
+
+  constexpr bool operator!=(const BigNum& other) const
+  {
+    return m_data != other.m_data;
+  }
+
   /// lsb is in the beginning. the topmost excess bits at m_data.back() are kept
   /// zero.
   std::array<Limb, LimbCount> m_data{};
