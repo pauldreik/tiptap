@@ -21,30 +21,16 @@ class SmallLFSR
     "the state must be able to represent the size of the shift register");
 
   template<std::size_t... ints>
-  static constexpr State mask_impl(std::index_sequence<ints...>)
+  constexpr int parity_impl(std::index_sequence<ints...>)
   {
-    constexpr std::size_t v[] = { ints... };
-    static_assert(std::adjacent_find(std::cbegin(v), std::cend(v)) ==
-                    std::cend(v),
-                  "taps must not contain duplicate elements");
-    static_assert(
-      std::is_sorted(std::cbegin(v), std::cend(v), std::greater<>()),
-      "taps must be sorted in descending order");
-    static_assert(
-      std::all_of(std::cbegin(v), std::cend(v), [](auto x) { return x <= N; }),
-      "all taps must be lower or equal than N");
-    return ((State{ 1U } << (N - ints)) | ...);
+    return 0x1 & ((m_state >> (N - ints)) ^ ...);
   }
 
 public:
-  // taps numbered according to LFSR convention
-  using taps = decltype(getTaps<N>());
-  static constexpr State mask() { return mask_impl(taps{}); }
-
   constexpr void next()
   {
-    constexpr auto m = mask();
-    const unsigned bit = __builtin_parity(m_state & m);
+    // taps numbered according to LFSR convention
+    const unsigned bit = parity_impl(getTaps<N>());
     using Tmp = std::common_type_t<State, unsigned>;
     m_state = (m_state >> 1) | (Tmp{ bit } << (N - 1));
   }
