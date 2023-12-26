@@ -12,6 +12,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     option(TIPTAP_SANITIZERS "use sanitizers" On)
     option(TIPTAP_BUILD_TESTS "build unit tests" On)
     option(TIPTAP_BUILD_BENCHMARK "build benchmark" On)
+    option(TIPTAP_BUILD_EXAMPLES "build examples" On)
 
     if(TIPTAP_SANITIZERS)
         add_compile_options(-fsanitize=undefined,address)
@@ -24,6 +25,9 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
     if(TIPTAP_BUILD_BENCHMARK)
        add_subdirectory(benchmark)
+    endif()
+    if(TIPTAP_BUILD_EXAMPLES)
+        add_subdirectory(examples)
     endif()
 endif()
 
