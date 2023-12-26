@@ -212,3 +212,19 @@ TEST_CASE("benchmark big 168 bit LFSR")
     return run_impl<BigLFSR<168, std::uint64_t>>();
   };
 }
+
+TEST_CASE("16 bit shootout")
+{
+  BENCHMARK("BigLFSR<16, std::uint16_t>")
+  {
+    return run_impl<BigLFSR<16, std::uint16_t>>();
+  };
+  BENCHMARK("wikipedia 16bit LFSR")
+  {
+    return run_impl<LFSR_wikipedia>();
+  };
+  BENCHMARK("SmallLFSR<16>")
+  {
+    return run_impl<SmallLFSR<16>>();
+  };
+}

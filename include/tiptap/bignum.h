@@ -23,7 +23,10 @@ struct BigNum
   template<std::size_t... bits>
   constexpr int parity(std::index_sequence<bits...>) const
   {
-    return ((ith_bit<bits>() + ...) & 0x1);
+    return ((m_data[bits / BitsPerLimb] >>
+             (bits - (bits / BitsPerLimb) * BitsPerLimb)) ^
+            ...) &
+           0x1;
   }
 
   constexpr int popcount() const
@@ -52,6 +55,17 @@ struct BigNum
     const auto bitwithinlimb = bit - (bit / BitsPerLimb) * BitsPerLimb;
     const auto limbmask = 1U << bitwithinlimb;
     return (m_data[limb] & limbmask);
+  }
+
+  template<std::size_t bit>
+  constexpr void set_bit_to(bool value)
+  {
+    static_assert(bit < Nbits);
+    constexpr auto limb = bit / BitsPerLimb;
+    constexpr auto bitwithinlimb = bit - (bit / BitsPerLimb) * BitsPerLimb;
+    constexpr Limb limbmask = Limb{ 1U } << bitwithinlimb;
+    m_data[limb] =
+      (m_data[limb] & ~limbmask) | (Limb{ value } << bitwithinlimb);
   }
 
   constexpr void set_bit_to(std::size_t bit, bool value)
