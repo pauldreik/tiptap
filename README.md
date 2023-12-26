@@ -59,7 +59,7 @@ This program takes very long to finish, the first 100 M lines took 47 seconds on
 
 I made this for fun. I had in mind to make a counter+block cipher based pseudo random number generator, to see how many rounds of AES would be needed to pass statistical randomness tests. 
 
-It may be useful to prototype stuff - I have FPGA implementations in mind, where an LSFR should be very cheap compared to a counter. Being able to prototype in C++ is nice.
+It may be useful to prototype stuff - I have FPGA implementations in mind, where an LFSR should be very cheap compared to a counter. Being able to prototype in C++ is nice.
 
 ## Smaller sizes (3<=N<=64)
 
