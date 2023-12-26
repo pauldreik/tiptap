@@ -37,13 +37,11 @@ class SmallLFSR
   }
 
 public:
-  SmallLFSR() {}
-
   // taps numbered according to LFSR convention
   using taps = decltype(getTaps<N>());
   static constexpr State mask() { return mask_impl(taps{}); }
 
-  void next()
+  constexpr void next()
   {
     constexpr auto m = mask();
     const unsigned bit = __builtin_parity(m_state & m);
@@ -52,7 +50,7 @@ public:
   }
 
   /// observe the state
-  State state() const { return m_state; }
+  constexpr State state() const { return m_state; }
 
 private:
   State m_state = 1;
