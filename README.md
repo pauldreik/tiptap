@@ -2,6 +2,8 @@
 
 This is a constexpr C++ 20 library for implementing [LFSR](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) of varying size.
 
+License: Boost software license 1.0
+
 ## Quick example
 ```cpp
 #include <iostream>
@@ -29,7 +31,29 @@ This is 15 elements, which is the longest cycle using N=4 taps.
 
 There are no external dependencies.
 
-License: Boost software license 1.0
+## Longer example with N=4096
+
+This example shows a very big shift register. It deliberately uses a second optional template argument to specify the state to be built from std::uint8_t.
+
+```cpp
+#include <iostream>
+#include <tiptap/lfsr.h>
+
+int
+main()
+{
+  constexpr std::size_t N = 4096;
+  BigLFSR<N, std::uint8_t> lfsr;
+
+  const auto initial_state = lfsr.state();
+  do {
+    std::cout << +lfsr.state().m_data[0] << '\n';
+    lfsr.next();
+  } while (lfsr.state() != initial_state);
+}
+
+```
+This program takes very long to finish, the first 100 M lines took 47 seconds on my machine. It is expected to wrap around at `2**N`, which is about 1e1219 years.
 
 ## Why? What is the purpose?
 
@@ -45,7 +69,7 @@ The class is templated on the size, all steps between N=3 and N=64 are supported
 
 Trying to use an excessive size or below 3 results in a compile time error.
 
-## Larger sizes (up to N=168)
+## Larger sizes (up to N=168 and occasional values up to N=4096)
 
 Larger LFSR is implemented in BigLFSR using a custom bignum class, adapted for this purpose. That should in theory make it faster, since the bignum class only needs to support what is needed for LFSRs, not arbitrary operations.
 
