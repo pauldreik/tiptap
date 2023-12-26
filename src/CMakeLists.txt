@@ -17,3 +17,4 @@ target_include_directories(tiptap PUBLIC
     )
 
 target_compile_features(tiptap PUBLIC cxx_std_20)
+add_library(tiptap::tiptap ALIAS tiptap)
