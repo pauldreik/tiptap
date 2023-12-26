@@ -2,6 +2,31 @@
 
 This is a constexpr C++ 20 library for implementing [LFSR](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) of varying size.
 
+## Quick example
+```cpp
+#include <iostream>
+#include <tiptap/lfsr.h>
+
+int
+main()
+{
+  constexpr std::size_t N = 4;
+  SmallLFSR<N> lfsr;
+
+  const auto initial_state = lfsr.state();
+  do {
+    std::cout << +lfsr.state() << ' ';
+    lfsr.next();
+  } while (lfsr.state() != initial_state);
+  std::cout << '\n';
+}
+
+```
+The above example will output:
+> 1 8 4 2 9 12 6 11 5 10 13 14 15 7 3 
+
+This is 15 elements, which is the longest cycle using N=4 taps.
+
 There are no external dependencies.
 
 License: Boost software license 1.0
