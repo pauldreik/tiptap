@@ -63,3 +63,23 @@ TEST_CASE("test small LSFR (32 bits) with brute force")
 {
   test_lfsr<17>();
 }
+
+namespace {
+template<std::size_t N, std::size_t Msteps>
+constexpr auto
+proceed()
+{
+  SmallLFSR<N> lfsr;
+  for (std::size_t i = 0; i < Msteps; ++i) {
+    lfsr.next();
+  }
+  return lfsr.state();
+}
+}
+
+TEST_CASE("ensure small LSFR is usable in constexpr context")
+{
+  constexpr auto third = proceed<12, 3>();
+  constexpr auto fourth = proceed<12, 4>();
+  static_assert(third != fourth);
+}
