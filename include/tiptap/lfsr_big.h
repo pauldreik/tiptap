@@ -13,13 +13,7 @@ class BigLFSR
   using State = BigNum<N, Limb>;
 
 public:
-  BigLFSR()
-  {
-    // start at one
-    m_state.set_bit_to(0, true);
-  }
-
-  void next()
+  constexpr void next()
   {
     constexpr auto taps = getTaps<N>();
     const auto bit = m_state.parity(taps_to_bits(taps));
@@ -29,7 +23,7 @@ public:
   }
 
   /// observe the state
-  State state() const { return m_state; }
+  constexpr State state() const { return m_state; }
 
 private:
   template<std::size_t... ints>
@@ -37,5 +31,5 @@ private:
   {
     return std::index_sequence<(N - ints)...>{};
   }
-  State m_state{};
+  State m_state{ 1 };
 };

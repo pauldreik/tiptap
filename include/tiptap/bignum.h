@@ -80,7 +80,7 @@ struct BigNum
   }
 
   // right shift one bit
-  void shr_one_bit()
+  constexpr void shr_one_bit()
   {
     for (std::size_t i = 0; i < m_data.size(); ++i) {
       m_data[i] >>= 1;
@@ -101,7 +101,7 @@ requires requires
 {
   Nbits <= 64;
 }
-std::uint64_t
+constexpr std::uint64_t
 to_uint64(const BigNum<Nbits, Limb>& bignum)
 {
   std::uint64_t ret{};
