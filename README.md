@@ -47,8 +47,18 @@ Trying to use an excessive size or below 3 results in a compile time error.
 
 ## Larger sizes (up to N=168)
 
-Larger LFSR is implemented with a custom bignum class, adapted for this purpose. That should in theory make it faster, since the bignum class only needs to support what is needed for LFSRs, not arbitrary operations.
+Larger LFSR is implemented in BigLFSR using a custom bignum class, adapted for this purpose. That should in theory make it faster, since the bignum class only needs to support what is needed for LFSRs, not arbitrary operations.
 
 There is no limit on size, if the taps are known for larger N (the best I could find is [this pdf linked from wikipedia](https://web.archive.org/web/20161007061934/http://courses.cse.tamu.edu/csce680/walker/lfsr_table.pdf)), there is no problem augmenting the code.
 
 Trying to use a size which is unsupported results in a compile time error.
+
+## Performance ##
+
+Benchmarks are included in the benchmark folder. Looking at a N=16 bit example using std::uint16_t, the performance is equal between the following:
+ - The code snippet on wikipedia, written in C
+ - The SmallLFSR class (using std::uint16_t)
+ - The BigLFSR class, using C++ abstractions: a std::array and fold expressions.
+
+The abstraction luckily melts away in the optimizer.
+   
