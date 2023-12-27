@@ -177,7 +177,7 @@ constexpr std::uint64_t
 to_uint64(const BigNum<Nbits, Limb>& bignum)
 {
   std::uint64_t ret{};
-  if constexpr (bignum.BitsPerLimb < 64) {
+  if constexpr (BigNum<Nbits, Limb>::BitsPerLimb < 64) {
     for (std::size_t i = 0; i < bignum.LimbCount; ++i) {
       ret <<= bignum.BitsPerLimb;
       ret |= bignum.m_data[bignum.LimbCount - 1 - i];
