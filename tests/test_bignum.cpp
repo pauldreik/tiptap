@@ -42,6 +42,53 @@ TEST_CASE("a specific bit can be set")
   REQUIRE(big.parity(std::index_sequence<2, 3, 34, 78, 79, 80>{}) == 0);
 }
 
+TEST_CASE("generate parity in the top bit")
+{
+  GIVEN("a number which fits")
+  {
+    BigNum<32, std::uint32_t> big;
+    big.complement_in_place();
+    WHEN("one bit is examined")
+    {
+      const auto parity = big.parity_into_topbit(std::index_sequence<2>{});
+      REQUIRE(parity == (1ULL << 31));
+    }
+    WHEN("two bits are examined")
+    {
+      const auto parity = big.parity_into_topbit(std::index_sequence<2, 3>{});
+      REQUIRE(parity == 0);
+    }
+    WHEN("three bits are examined")
+    {
+      const auto parity =
+        big.parity_into_topbit(std::index_sequence<2, 3, 4>{});
+      REQUIRE(parity == (1ULL << 31));
+    }
+  }
+
+  GIVEN("a number which does not fit")
+  {
+    BigNum<73, std::uint32_t> big;
+    big.complement_in_place();
+    WHEN("one bit is examined")
+    {
+      const auto parity = big.parity_into_topbit(std::index_sequence<2>{});
+      REQUIRE(parity == (1ULL << 8));
+    }
+    WHEN("two bits are examined")
+    {
+      const auto parity = big.parity_into_topbit(std::index_sequence<2, 3>{});
+      REQUIRE(parity == 0);
+    }
+    WHEN("three bits are examined")
+    {
+      const auto parity =
+        big.parity_into_topbit(std::index_sequence<2, 3, 4>{});
+      REQUIRE(parity == (1ULL << 8));
+    }
+  }
+}
+
 TEST_CASE("bignum can be used in constexpr context")
 {
   constexpr BigNum<1234> big;

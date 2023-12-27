@@ -7,6 +7,23 @@
 #include <limits>
 #include <utility>
 
+namespace detail {
+template<std::size_t current_bit_index,
+         std::size_t desired_bit_index,
+         typename Limb>
+constexpr Limb
+signed_shift(Limb x)
+{
+  if constexpr (desired_bit_index > current_bit_index) {
+    return x << (desired_bit_index - current_bit_index);
+  } else if constexpr (desired_bit_index < current_bit_index) {
+    return x >> (current_bit_index - desired_bit_index);
+  } else {
+    return x;
+  }
+}
+}
+
 /**
  * this is a bignum class with very limited functionality, just
  * the bare minimum to be able to use it for implementing large LFSR
@@ -27,6 +44,19 @@ struct BigNum
              (bits - (bits / BitsPerLimb) * BitsPerLimb)) ^
             ...) &
            0x1;
+  }
+
+  template<std::size_t... bits>
+  constexpr Limb parity_into_topbit(std::index_sequence<bits...>) const
+  {
+    // the zero index of the top bit in the MSB limb
+    constexpr auto topbitindex = (Nbits - 1) % BitsPerLimb;
+    constexpr Limb topbitmask = 1ULL << topbitindex;
+
+    return (detail::signed_shift<bits % BitsPerLimb, topbitindex>(
+              m_data[bits / BitsPerLimb]) ^
+            ...) &
+           topbitmask;
   }
 
   constexpr int popcount() const
@@ -104,6 +134,21 @@ struct BigNum
         m_data[i] |= (m_data[i + 1] << (BitsPerLimb - 1));
       } else {
         m_data[i] |= (Limb{ top_bit } << (BitsPerLimb - ExcessBits - 1));
+      }
+    }
+  }
+
+  // right shifts one bit, puts the given top_bit into the topmost bit. note
+  // that top_bit should have it's correct position already.
+  constexpr void shr_one_bit(Limb top_bit)
+  {
+    for (std::size_t i = 0; i < m_data.size(); ++i) {
+      m_data[i] >>= 1;
+      if (i + 1 < m_data.size()) {
+        // get the top bit from the bottom bit of the next limb
+        m_data[i] |= (m_data[i + 1] << (BitsPerLimb - 1));
+      } else {
+        m_data[i] |= top_bit;
       }
     }
   }
