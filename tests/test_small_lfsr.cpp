@@ -5,11 +5,11 @@
 
 #include "tiptap/lfsr_small.h"
 
-template<std::size_t N>
+template<std::size_t N, bool use_direct_top_bit>
 void
-test_lfsr()
+test_lfsr_impl()
 {
-  SmallLFSR<N> lfsr;
+  SmallLFSR<N, use_direct_top_bit> lfsr;
   using State = decltype(lfsr.state());
 
   // the expected number of entries is 2**N-1
@@ -35,6 +35,14 @@ test_lfsr()
     constexpr std::common_type_t<State, std::size_t> max = (1ULL << N);
     return s > 0 && s < max;
   }));
+}
+
+template<std::size_t N>
+void
+test_lfsr()
+{
+  test_lfsr_impl<N, false>();
+  test_lfsr_impl<N, true>();
 }
 
 TEST_CASE("test small LSFR (8 bits) with brute force")
