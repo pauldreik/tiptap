@@ -1,0 +1,37 @@
+#include <cstdint>
+#include <span>
+
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_test_macros.hpp>
+
+#include "tiptap/lfsr.h"
+
+namespace {
+std::uint32_t
+Fnva1aHash(std::span<const char> data)
+{
+  std::uint32_t state = 0x811c9dc5;
+  for (const auto d : data) {
+    state ^= d;
+    state *= 0x01000193;
+  }
+  return state;
+}
+
+template<typename LFSR>
+unsigned
+run_impl()
+{
+  LFSR x;
+  const std::uint32_t maxreps = 1'000'000;
+  for (std::uint32_t i = 0; i < maxreps; ++i) {
+    x.next();
+  }
+  // return the hash of the state, to make it more difficult for the optimizer
+  // to remove it
+  const auto tmp = x.state();
+  const auto* ptr = reinterpret_cast<const char*>(&tmp);
+  return Fnva1aHash(std::span<const char>(ptr, ptr + sizeof(tmp)));
+}
+
+}
