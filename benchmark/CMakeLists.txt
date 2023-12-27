@@ -10,5 +10,8 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(benchmark benchmark.cpp)
 target_link_libraries(benchmark PRIVATE tiptap Catch2::Catch2WithMain)
 
+add_executable(extensive_benchmark extensive_benchmark.cpp)
+target_link_libraries(extensive_benchmark PRIVATE tiptap Catch2::Catch2WithMain)
+
 
 
