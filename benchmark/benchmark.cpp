@@ -215,29 +215,72 @@ TEST_CASE("benchmark big 168 bit LFSR")
 
 TEST_CASE("N=16 shootout")
 {
-  BENCHMARK("BigLFSR<16, std::uint8_t>")
+  BENCHMARK("BigLFSR<16, std::uint8_t, false> (blah)")
   {
-    return run_impl<BigLFSR<16, std::uint8_t>>();
+    return run_impl<BigLFSR<16, std::uint8_t, false>>();
   };
-  BENCHMARK("BigLFSR<16, std::uint16_t>")
+  BENCHMARK("BigLFSR<16, std::uint8_t, false>")
   {
-    return run_impl<BigLFSR<16, std::uint16_t>>();
+    return run_impl<BigLFSR<16, std::uint8_t, false>>();
   };
-  BENCHMARK("BigLFSR<16, std::uint32_t>")
+  BENCHMARK("BigLFSR<16, std::uint16_t, false>")
   {
-    return run_impl<BigLFSR<16, std::uint32_t>>();
+    return run_impl<BigLFSR<16, std::uint16_t, false>>();
   };
-  BENCHMARK("BigLFSR<16, std::uint64_t>")
+  BENCHMARK("BigLFSR<16, std::uint32_t, false>")
   {
-    return run_impl<BigLFSR<16, std::uint64_t>>();
+    return run_impl<BigLFSR<16, std::uint32_t, false>>();
+  };
+  BENCHMARK("BigLFSR<16, std::uint64_t, false>")
+  {
+    return run_impl<BigLFSR<16, std::uint64_t, false>>();
+  };
+  BENCHMARK("BigLFSR<16, std::uint8_t, true>")
+  {
+    return run_impl<BigLFSR<16, std::uint8_t, true>>();
+  };
+  BENCHMARK("BigLFSR<16, std::uint16_t, true>")
+  {
+    return run_impl<BigLFSR<16, std::uint16_t, true>>();
+  };
+  BENCHMARK("BigLFSR<16, std::uint32_t, true>")
+  {
+    return run_impl<BigLFSR<16, std::uint32_t, true>>();
+  };
+  BENCHMARK("BigLFSR<16, std::uint64_t, true>")
+  {
+    return run_impl<BigLFSR<16, std::uint64_t, true>>();
   };
   BENCHMARK("wikipedia 16bit LFSR")
   {
     return run_impl<LFSR_wikipedia>();
   };
-  BENCHMARK("SmallLFSR<16>")
+
+  BENCHMARK("SmallLFSR<16,true,std::uint16_t>")
   {
-    return run_impl<SmallLFSR<16>>();
+    return run_impl<SmallLFSR<16, true, std::uint16_t>>();
+  };
+  BENCHMARK("SmallLFSR<16,false,std::uint16_t>")
+  {
+    return run_impl<SmallLFSR<16, false, std::uint16_t>>();
+  };
+
+  BENCHMARK("SmallLFSR<16,true,std::uint32_t>")
+  {
+    return run_impl<SmallLFSR<16, true, std::uint32_t>>();
+  };
+  BENCHMARK("SmallLFSR<16,false,std::uint32_t>")
+  {
+    return run_impl<SmallLFSR<16, false, std::uint32_t>>();
+  };
+
+  BENCHMARK("SmallLFSR<16,true,std::uint64_t>")
+  {
+    return run_impl<SmallLFSR<16, true, std::uint64_t>>();
+  };
+  BENCHMARK("SmallLFSR<16,false,std::uint64_t>")
+  {
+    return run_impl<SmallLFSR<16, false, std::uint64_t>>();
   };
 }
 
