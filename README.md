@@ -79,10 +79,12 @@ Trying to use a size which is unsupported results in a compile time error.
 
 ## Performance ##
 
-Benchmarks are included in the benchmark folder. Looking at a N=16 bit example using std::uint16_t, the performance is equal between the following:
- - The code snippet on wikipedia, written in C
- - The SmallLFSR class (using std::uint16_t)
- - The BigLFSR class, using C++ abstractions: a std::array and fold expressions.
+The abstraction provided mostly melts away in the optimizer, and the performance is on par with hand coded C. There are however knobs to tweak, since the best performance depends on N (and obviously the compiler settings, cpu etc). The classes has template parameters for the underlying storage and how the topmost bit is set during the LFSR update step.
 
-The abstraction luckily melts away in the optimizer.
+Benchmarks are included in the benchmark folder. Looking at a N=16 bit example using std::uint16_t:
+ - The code snippet on wikipedia, written in C: 1642 µs/1M iterations 
+ - The SmallLFSR class: 1668-2022 µs/1M iterations depending on the template parameters
+ - The BigLFSR class: 1393-2024 µs/1M iterations depending on the template parameters 
+
+It is recommended to run the benchmark on the target system to find the optimal settings. if performance is important. See [benchmark results](benchmark/benchmark_results_N_up_to_64.ods) for performance measured with gcc 12 on a i7-10710U CPU.
    
