@@ -14,12 +14,14 @@
  * use_direct_top_bit is an implementation detail, leading to slightly
  * different code gen. seems like use_direct_top_bit gives zero to 15%
  * boost depending on N.
+ * State is the underlying type to use, default is to use an unsigned integer
+ * the smallest size possible.
  */
-template<std::size_t N, bool use_direct_top_bit = true>
+template<std::size_t N,
+         bool use_direct_top_bit = true,
+         typename State = SelectInteger_t<N>>
 class SmallLFSR
 {
-
-  using State = SelectInteger_t<N>;
   /// State, after integer promotion
   using PromotedState = std::common_type_t<State, unsigned>;
 
