@@ -56,4 +56,4 @@ struct SelectInteger : SelectImpl<bitwidth<N>()>
  * selects the smallest builtin integer type that can hold N bits
  */
 template<int N>
-using SelectInteger_t = detail::SelectInteger<N>::type;
+using SelectInteger_t = typename detail::SelectInteger<N>::type;
