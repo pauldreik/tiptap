@@ -32,3 +32,11 @@ add_test(test_small_lfsr test_small_lfsr)
 add_executable(test_large_lfsr test_large_lfsr.cpp)
 target_link_libraries(test_large_lfsr PRIVATE tiptap Catch2::Catch2WithMain)
 add_test(test_large_lfsr test_large_lfsr)
+
+find_package(vectorclass)
+
+if(vectorclass_FOUND)
+    add_executable(test_vectorclass_lfsr test_vectorclass_lfsr.cpp)
+    target_link_libraries(test_vectorclass_lfsr PRIVATE vectorclass::vectorclass tiptap Catch2::Catch2WithMain vectorclass::vectorclass)
+    add_test(test_vectorclass_lfsr test_vectorclass_lfsr)
+endif()

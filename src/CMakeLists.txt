@@ -12,6 +12,17 @@ target_sources(tiptap
     ${include_dir}/lfsr_coefficients.h
 )
 
+find_package(vectorclass)
+
+if(vectorclass_FOUND)
+    target_sources(tiptap
+    INTERFACE
+    ${include_dir}/lfsr_vectorclass.h
+)
+target_link_libraries(tiptap INTERFACE vectorclass::vectorclass)
+endif()
+
+
 target_include_directories(tiptap INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
