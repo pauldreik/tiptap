@@ -51,7 +51,7 @@ struct BigNum
   {
     // the zero index of the top bit in the MSB limb
     constexpr auto topbitindex = (Nbits - 1) % BitsPerLimb;
-    constexpr Limb topbitmask = 1ULL << topbitindex;
+    constexpr Limb topbitmask = Limb{ 1 } << topbitindex;
 
     return (detail::signed_shift<bits % BitsPerLimb, topbitindex>(
               m_data[bits / BitsPerLimb]) ^
@@ -74,7 +74,7 @@ struct BigNum
     static_assert(bit <= Nbits);
     constexpr auto limb = bit / BitsPerLimb;
     constexpr auto bitwithinlimb = bit - (bit / BitsPerLimb) * BitsPerLimb;
-    constexpr auto limbmask = 1U << bitwithinlimb;
+    constexpr auto limbmask = Limb{ 1 } << bitwithinlimb;
     return (m_data[limb] & limbmask);
   }
 

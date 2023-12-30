@@ -45,7 +45,7 @@ class SmallLFSR
   template<std::size_t... taps>
   constexpr PromotedState put_parity_in_top_bit(std::index_sequence<taps...>)
   {
-    constexpr State topbitmask = (1ULL << (N - 1));
+    constexpr State topbitmask = (PromotedState{ 1 } << (N - 1));
 
     // the zero indexed bit is (N-taps). If we right shift it to the bottom bit
     // with (N-taps), we need it shifted left (N-1) to end up at the top bit.
