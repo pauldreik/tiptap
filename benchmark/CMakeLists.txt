@@ -9,6 +9,12 @@
 find_package(Catch2 REQUIRED)
 
 
+find_package(vectorclass)
+
+if(vectorclass_FOUND)
+    add_compile_definitions(HAVE_VECTORCLASS=1)
+endif()
+
 add_executable(benchmark benchmark.cpp)
 target_link_libraries(benchmark PRIVATE tiptap Catch2::Catch2WithMain)
 

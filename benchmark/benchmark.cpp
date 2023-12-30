@@ -10,6 +10,9 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "tiptap/lfsr.h"
+#if HAVE_VECTORCLASS
+#include "tiptap/lfsr_vectorclass.h"
+#endif
 
 // list of taps
 // https://datacipy.cz/lfsr_table.pdf
@@ -367,3 +370,21 @@ TEST_CASE("alternative implementation of small")
     return run_impl<SmallLFSR<32, false>>();
   };
 }
+
+#if HAVE_VECTORCLASS
+TEST_CASE("benchmark LFSR vs vector")
+{
+  BENCHMARK("SmallLFSR<32>")
+  {
+    return run_impl<SmallLFSR<32>>();
+  };
+  BENCHMARK("BigLFSR<32>")
+  {
+    return run_impl<BigLFSR<32>>();
+  };
+  BENCHMARK("VectorLFSR<32>")
+  {
+    return run_impl<VectorLFSR<32>>();
+  };
+}
+#endif
