@@ -19,7 +19,14 @@ TEST_CASE("the correct integer is selected")
   static_assert(std::is_same_v<SelectInteger_t<33>, std::uint64_t>);
   static_assert(std::is_same_v<SelectInteger_t<45>, std::uint64_t>);
   static_assert(std::is_same_v<SelectInteger_t<64>, std::uint64_t>);
-
+#ifdef __SIZEOF_INT128__
+  static_assert(std::is_same_v<SelectInteger_t<65>, unsigned __int128>);
+  static_assert(std::is_same_v<SelectInteger_t<73>, unsigned __int128>);
+  static_assert(std::is_same_v<SelectInteger_t<128>, unsigned __int128>);
+#else
   // will fail to compile
-  // static_assert(std::is_same_v<SelectInteger_t<65>, std::uint64_t>);
+  using Fail = SelectInteger_t<65>;
+#endif
+  // will fail to compile
+  // using Fail = SelectInteger_t<129>;
 }

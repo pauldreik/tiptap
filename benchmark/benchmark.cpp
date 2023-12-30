@@ -395,6 +395,54 @@ TEST_CASE("measure unrolling by running multiple")
     return run_impl<L32>();
   };
 }
+
+TEST_CASE("N=128 shootout")
+{
+  using U128 = unsigned __int128;
+
+  BENCHMARK("Dual SmallLFSR<128,false>")
+  {
+    using L = SmallLFSR<128, false, U128>;
+    return run_impl<Tandem<L, L>>();
+  };
+  BENCHMARK("Dual SmallLFSR<128,true>")
+  {
+    using L = SmallLFSR<128, true, U128>;
+    return run_impl<Tandem<L, L>>();
+  };
+  BENCHMARK("Quad SmallLFSR<128,true>")
+  {
+    using L = SmallLFSR<128, true, U128>;
+    using L2 = Tandem<L, L>;
+    return run_impl<Tandem<L2, L2>>();
+  };
+
+  BENCHMARK("BigLFSR<128, std::uint8_t>")
+  {
+    return run_impl<BigLFSR<128, U128>>();
+  };
+  BENCHMARK("BigLFSR<128, std::uint16_t>")
+  {
+    return run_impl<BigLFSR<128, U128>>();
+  };
+  BENCHMARK("BigLFSR<128, std::uint32_t>")
+  {
+    return run_impl<BigLFSR<128, U128>>();
+  };
+  BENCHMARK("BigLFSR<128, std::uint64_t>")
+  {
+    return run_impl<BigLFSR<128, U128>>();
+  };
+  BENCHMARK("SmallLFSR<128,true>")
+  {
+    return run_impl<SmallLFSR<128, true, U128>>();
+  };
+  BENCHMARK("SmallLFSR<128,false>")
+  {
+    return run_impl<SmallLFSR<128, false, U128>>();
+  };
+}
+
 TEST_CASE("alternative implementation of small")
 {
   BENCHMARK("SmallLFSR<64,true>")
