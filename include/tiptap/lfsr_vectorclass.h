@@ -6,7 +6,7 @@
 #include "lfsr_coefficients.h"
 #include "vectorclass.h"
 
-template<std::size_t N>
+template<std::size_t N, bool use_direct_top_bit = true>
 class VectorLFSR
 {
 
@@ -16,6 +16,13 @@ class VectorLFSR
   static_assert(
     std::numeric_limits<Element>::digits >= N,
     "the state must be able to represent the size of the shift register");
+
+  template<std::size_t... taps>
+  constexpr State parity_impl(std::index_sequence<taps...>)
+  {
+    // this shifts everything to the bottom bit:
+    return 0x1 & ((m_state >> int(N - taps)) ^ ...);
+  }
 
   /// this calculates the parity of the bits at the taps position,
   /// and places the result in the topmost bit
@@ -34,7 +41,11 @@ class VectorLFSR
 public:
   constexpr void next()
   {
-    m_state = (m_state >> 1) | put_parity_in_top_bit(getTaps<N>());
+    if constexpr (use_direct_top_bit) {
+      m_state = (m_state >> 1) | put_parity_in_top_bit(getTaps<N>());
+    } else {
+      m_state = (m_state >> 1) | (parity_impl(getTaps<N>()) << int(N - 1));
+    }
   }
 
   /// observe the state
