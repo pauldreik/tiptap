@@ -335,6 +335,66 @@ TEST_CASE("N=64 shootout")
   };
 }
 
+namespace {
+template<typename LFSR1, typename LFSR2>
+struct Tandem
+{
+  LFSR1 m_lfsr1;
+  LFSR2 m_lfsr2;
+  Tandem()
+  {
+    // prevent optimizing by letting the second one run with slight offset
+    m_lfsr2.next();
+  }
+
+  void next()
+  {
+    m_lfsr1.next();
+    m_lfsr2.next();
+  }
+  auto state() const { return m_lfsr1.state() & m_lfsr2.state(); }
+};
+}
+
+TEST_CASE("measure unrolling by running multiple")
+{
+  using L = SmallLFSR<32>;
+  using L2 = Tandem<L, L>;
+  using L3 = Tandem<L, L2>;
+  using L4 = Tandem<L2, L2>;
+  using L8 = Tandem<L4, L4>;
+  using L16 = Tandem<L8, L8>;
+  using L32 = Tandem<L16, L16>;
+
+  BENCHMARK("single")
+  {
+    return run_impl<L>();
+  };
+  BENCHMARK("double")
+  {
+    return run_impl<L2>();
+  };
+  BENCHMARK("triple")
+  {
+    return run_impl<L3>();
+  };
+  BENCHMARK("quadruple")
+  {
+    return run_impl<L4>();
+  };
+  BENCHMARK("eight")
+  {
+    return run_impl<L8>();
+  };
+  BENCHMARK("sixteen")
+  {
+    return run_impl<L16>();
+  };
+  BENCHMARK("thirtytwo")
+  {
+    return run_impl<L32>();
+  };
+}
 TEST_CASE("alternative implementation of small")
 {
   BENCHMARK("SmallLFSR<64,true>")
