@@ -4,10 +4,10 @@
 
 namespace detail {
 template<int N>
-concept fitsin64 = (N >= 0 && N <= 64);
+concept fitsin128 = (N >= 0 && N <= 128);
 
 template<int N>
-requires fitsin64<N>
+requires fitsin128<N>
 constexpr int
 bitwidth()
 {
@@ -19,6 +19,8 @@ bitwidth()
     return 32;
   if constexpr (N <= 64)
     return 64;
+  if constexpr (N <= 128)
+    return 128;
 }
 
 template<int N>
@@ -44,6 +46,15 @@ template<>
 struct SelectImpl<64>
 {
   using type = std::uint64_t;
+};
+template<>
+struct SelectImpl<128>
+{
+#ifdef __SIZEOF_INT128__
+  using type = unsigned __int128;
+#else
+#error "sorry, no 128 bit support"
+#endif
 };
 
 template<int N>

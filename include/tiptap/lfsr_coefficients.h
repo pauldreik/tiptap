@@ -31,6 +31,14 @@ getTapsImpl()
     RawTaps rawtaps;
   };
 
+  // the relationship between the taps numbers and the polynomial to pass to
+  // mlpolygen is: for each tap i , set the i-1:th bit to 1.
+  // example for N=42 with taps 42, 41, 20, 19 in python:
+  // print(f"0x{ (2**42 + 2**41 + 2**20 + 2**19)>>1  :x}")
+  // 0x300000c0000
+  // verifying with mlpolygen:
+  // mlpolygen -t 0x300000c0000
+  // 0x300000c0000 is maximal length for order 42
   constexpr Pair data[] = {
     { Nbits{ 3 }, RawTaps{ 3, 2 } },
     { Nbits{ 4 }, RawTaps{ 4, 3 } },

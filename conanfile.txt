@@ -1,0 +1,7 @@
+[requires]
+vectorclass/2.02.00
+catch2/3.5.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
